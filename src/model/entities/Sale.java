@@ -2,7 +2,7 @@ package model.entities;
 
 import java.util.Objects;
 
-public class Sale {
+public class Sale implements Comparable<Sale> {
 	
 	private Integer month;
 	private Integer year;
@@ -57,10 +57,14 @@ public class Sale {
 	public void setTotal(Double total) {
 		this.total = total;
 	}
+	
+	public Double averagePrice() {
+		return total / items;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(seller);
+		return Objects.hash(seller, year);
 	}
 
 	@Override
@@ -72,12 +76,16 @@ public class Sale {
 		if (getClass() != obj.getClass())
 			return false;
 		Sale other = (Sale) obj;
-		return Objects.equals(seller, other.seller);
+		return Objects.equals(seller, other.seller) && Objects.equals(year, other.year);
 	}
 
 	@Override
 	public String toString() {
-		return "Sale [month=" + month + ", year=" + year + ", seller=" + seller + ", items=" + items + ", total="
-				+ total + "]";
+		return month + "/" + year + ", " + seller + ", " + items + ", " + total + ", pm = " + String.format("%.2f", averagePrice());
+	}
+
+	@Override
+	public int compareTo(Sale o) {
+		return averagePrice().compareTo(o.averagePrice());
 	}
 }
